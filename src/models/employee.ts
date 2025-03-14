@@ -26,8 +26,6 @@ const employeeSchema = new mongoose.Schema<Employee>({
     type: String,
     required: true,
     trim: true,
-    minlength: 6,
-    maxlength: 30,
   },
   salary: {
     type: Number,

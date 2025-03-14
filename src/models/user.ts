@@ -1,6 +1,6 @@
 import mongoose, { Document } from "mongoose";
 
-interface User extends Document {
+export interface User extends Document {
   username: string;
   password: string;
 }
@@ -18,8 +18,6 @@ const userSchema = new mongoose.Schema<User>({
     type: String,
     required: true,
     trim: true,
-    maxlength: 30,
-    minlength: 6,
   },
 });
 
