@@ -3,11 +3,23 @@ import userModel, { User } from "../../models/user";
 import { generateToken, TokenData } from "../../utils/generateToken";
 import { comparePassword, hashPassword } from "../../utils/password";
 import { sendMail } from "../../utils/mail";
+import { validateUser } from "../../utils/zod";
 
 export async function signUp(req: Request, res: Response) {
   const userBody: User = req.body;
 
   try {
+    const validBody = validateUser(userBody);
+
+    if (!validBody.success) {
+      res.status(400).json({
+        status: false,
+        message: "Invalid Inputs",
+        error: validBody.error.errors.map((err) => err.message),
+      });
+      return;
+    }
+
     userBody.password = await hashPassword(userBody.password);
 
     const user = new userModel(userBody);
@@ -48,6 +60,17 @@ export async function login(req: Request, res: Response) {
   const userBody: User = req.body;
 
   try {
+    const validBody = validateUser(userBody);
+
+    if (!validBody.success) {
+      res.status(400).json({
+        status: false,
+        message: "Invalid Inputs",
+        error: validBody.error.errors.map((err) => err.message),
+      });
+      return;
+    }
+
     const user = await userModel.findOne({
       username: userBody.username,
     });
