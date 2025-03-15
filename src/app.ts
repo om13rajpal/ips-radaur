@@ -1,11 +1,12 @@
 import express from "express";
-import { PORT } from "./config/config";
+import LoadEnv, { PORT } from "./config/config";
 import { connectMongo } from "./db/db";
 import logRequest from "./middlewares/requestLogger";
 import Handle404 from "./middlewares/404";
 import handleError from "./middlewares/error";
 import router from "./routes/routes";
 
+LoadEnv();
 connectMongo();
 const app = express();
 
