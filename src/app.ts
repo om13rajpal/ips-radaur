@@ -4,7 +4,7 @@ import { connectMongo } from "./db/db";
 import logRequest from "./middlewares/requestLogger";
 import Handle404 from "./middlewares/404";
 import handleError from "./middlewares/error";
-import { adminRouter, employeeRouter } from "./routes/routes";
+import { adminRouter, attendanceRouter, employeeRouter } from "./routes/routes";
 
 LoadEnv();
 connectMongo();
@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(logRequest);
 app.use("/api/admin", adminRouter);
 app.use("/api/employee", employeeRouter);
+app.use("/api/attendance", attendanceRouter)
 
 app.get("/", (req, res) => {
   res.send("<h1>IPS' Radaur</h1>\nBackend is up and running :)");
