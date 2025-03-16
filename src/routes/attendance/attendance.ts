@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import attendanceModel, { Status } from "../../models/attendance";
 import employeeModel from "../../models/employee";
+import { number } from "zod";
+import { sendMail } from "../../utils/mail";
 
 export default async function attendanceHandler(req: Request, res: Response) {
   const employeeId = req.params.id;
@@ -12,7 +14,7 @@ export default async function attendanceHandler(req: Request, res: Response) {
 
     var status: Status = Status.Present;
 
-    if (time > date.setHours(6, 30, 0, 0)) {
+    if (time > date.setHours(22, 20, 0, 0)) {
       status = Status.Late;
     }
 
@@ -71,7 +73,21 @@ export default async function attendanceHandler(req: Request, res: Response) {
       month.attendance.push(saveAtt._id);
       month.present += 1;
 
+      month.monthSalary += 1000;
+
       if (status === Status.Late) {
+        if (month.late >= 4) {
+          sendMail(
+            employee.email,
+            "Salary Deduction",
+            `Dear ${
+              employee.name
+            },\nYour have been deducted 100 for being late for more than 4 times in a month\nYour late count for this month is ${
+              month.late + 1
+            }`
+          );
+          month.monthSalary -= 100;
+        }
         month.late += 1;
       }
     }

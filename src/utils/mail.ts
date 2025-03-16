@@ -21,8 +21,6 @@ export async function sendMail(to: string, subject: string, message: string) {
       subject: subject,
       text: message,
     });
-
-    console.log(mail);
     return
   } catch (error) {
     console.log("Could not send the mail", error);

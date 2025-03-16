@@ -8,7 +8,7 @@ enum Department {
 export interface Employee extends Document {
   email: string;
   password: string;
-  salary: number | unknown;
+  salary: any;
   name: string;
   position: string;
   department: Department;
@@ -20,6 +20,10 @@ const monthSchema = new mongoose.Schema({
   month: {
     type: Number,
     require: true,
+  },
+  monthSalary: {
+    type: Number,
+    default: 0,
   },
   late: {
     type: Number,
