@@ -5,10 +5,10 @@ enum Department {
   Driver = "Driver",
 }
 
-interface Employee extends Document {
+export interface Employee extends Document {
   email: string;
   password: string;
-  salary: number;
+  salary: number | unknown;
   name: string;
   position: string;
   department: Department;
