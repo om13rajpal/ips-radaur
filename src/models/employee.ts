@@ -13,7 +13,34 @@ export interface Employee extends Document {
   position: string;
   department: Department;
   phoneNumber: string;
+  attendance: any;
 }
+
+const monthSchema = new mongoose.Schema({
+  month: {
+    type: Number,
+    require: true,
+  },
+  late: {
+    type: Number,
+    default: 0,
+  },
+  present: {
+    type: Number,
+    default: 0,
+  },
+  attendance: [mongoose.Schema.Types.ObjectId],
+});
+
+const yearSchema = new mongoose.Schema({
+  year: {
+    type: Number,
+    require: true,
+  },
+  months: [{
+    type: monthSchema,
+  }],
+}, {_id: false});
 
 const employeeSchema = new mongoose.Schema<Employee>({
   email: {
@@ -54,6 +81,9 @@ const employeeSchema = new mongoose.Schema<Employee>({
     required: true,
     trim: true,
   },
+  attendance: [{
+    type: yearSchema,
+  }],
 });
 
 const employeeModel = mongoose.model<Employee>("employee", employeeSchema);
