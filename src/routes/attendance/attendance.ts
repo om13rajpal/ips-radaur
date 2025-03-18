@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import attendanceModel, { Status } from "../../models/attendance";
 import employeeModel from "../../models/employee";
-import { number } from "zod";
 import { sendMail } from "../../utils/mail";
 
 export default async function attendanceHandler(req: Request, res: Response) {
@@ -97,6 +96,24 @@ export default async function attendanceHandler(req: Request, res: Response) {
       message: "Attendance Marked",
       data: saveAtt,
       user: employee,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      error: error,
+    });
+  }
+}
+
+export async function getAttendance(req: Request, res: Response) {
+  const id = req.params.id;
+
+  try {
+    const attendance = await attendanceModel.find({ employeeId: id });
+
+    res.status(200).json({
+      message: "Attendance Fetched",
+      data: attendance,
     });
   } catch (error) {
     res.status(500).json({

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { login, signUp } from "./user/auth";
 import { employeeLogin, employeeSignUp } from "./employee/auth";
 import { getEmployee, getEmployees } from "./employee/get";
-import attendanceHandler from "./attendance/attendance";
+import attendanceHandler, { getAttendance } from "./attendance/attendance";
 
 const adminRouter = Router();
 const employeeRouter = Router();
@@ -18,5 +18,6 @@ employeeRouter.get("/all", getEmployees)
 employeeRouter.get("/:id", getEmployee)
 
 attendanceRouter.post("/:id", attendanceHandler)
+attendanceRouter.get("/:id", getAttendance)
 
 export { adminRouter, employeeRouter, attendanceRouter };
