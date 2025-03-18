@@ -1,8 +1,30 @@
-import React from "react";
-import { employee } from "../constants/employee";
+import React, { useEffect, useState } from "react";
 import EmployeeCard from "../components/EmployeeCard";
+import axios from "axios";
 
 const Dashboard = () => {
+
+  const [employee, setEmployee] = useState([])
+
+  useEffect(()=>{
+    getEmployee()
+  }, [])
+
+  async function getEmployee(){
+    const response = await axios.get("http://localhost:3000/api/employee/all")
+    const data = response.data
+
+    console.log(data)
+
+    if(data.status){
+      console.log(data.data)
+      setEmployee(data.data)
+    }
+    else{
+      console.log(data)
+    }
+  }
+
   return (
     <div className="flex flex-col items-center">
       <div className="h-25"></div>
