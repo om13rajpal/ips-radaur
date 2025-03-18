@@ -12,7 +12,7 @@ const Input = ({ type, placeholder, setAuth }) => {
     <input
       type={type}
       placeholder={placeholder}
-      className="w-1/4 rounded-2xl py-2 px-4 border-2 border-black my-1"
+      className="w-1/4 rounded-2xl py-3 px-4 border-2 border-black my-1"
       onChange={onChange}
     />
   );

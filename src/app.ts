@@ -5,11 +5,13 @@ import logRequest from "./middlewares/requestLogger";
 import Handle404 from "./middlewares/404";
 import handleError from "./middlewares/error";
 import { adminRouter, attendanceRouter, employeeRouter } from "./routes/routes";
+import cors from "cors"
 
 LoadEnv();
 connectMongo();
 const app = express();
 
+app.use(cors())
 app.use(express.json());
 app.use(logRequest);
 app.use("/api/admin", adminRouter);
