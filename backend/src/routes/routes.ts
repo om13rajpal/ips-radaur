@@ -3,6 +3,7 @@ import { login, signUp } from "./user/auth";
 import { employeeLogin, employeeSignUp } from "./employee/auth";
 import { getEmployee, getEmployees } from "./employee/get";
 import attendanceHandler, { getAttendance } from "./attendance/attendance";
+import { updateEmployee } from "./employee/update";
 
 const adminRouter = Router();
 const employeeRouter = Router();
@@ -14,10 +15,12 @@ adminRouter.post("/login", login);
 employeeRouter.post("/signup", employeeSignUp);
 employeeRouter.post("/login", employeeLogin);
 
-employeeRouter.get("/all", getEmployees)
-employeeRouter.get("/:id", getEmployee)
+employeeRouter.get("/all", getEmployees);
+employeeRouter.get("/:id", getEmployee);
 
-attendanceRouter.post("/:id", attendanceHandler)
-attendanceRouter.get("/:id", getAttendance)
+employeeRouter.put("/:id", updateEmployee);
+
+attendanceRouter.post("/:id", attendanceHandler);
+attendanceRouter.get("/:id", getAttendance);
 
 export { adminRouter, employeeRouter, attendanceRouter };
