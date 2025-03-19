@@ -5,9 +5,15 @@ export async function updateEmployee(req: Request, res: Response) {
   const id = req.params.id;
   const body = req.body;
   try {
-    const updatedUser = await employeeModel.findByIdAndUpdate(id, body, {
-      new: true,
-    });
+    const updatedUser = await employeeModel.findByIdAndUpdate(
+      id,
+      {
+        $set: body,
+      },
+      {
+        new: true,
+      }
+    );
 
     if (!updatedUser) {
       res.status(404).json({

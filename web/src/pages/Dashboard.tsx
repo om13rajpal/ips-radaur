@@ -20,6 +20,7 @@ const Dashboard = () => {
 
       if (data.status) {
         setData(data.data);
+        console.log(data.data);
       } else {
         console.log(data.message);
         toast.error(data.message);

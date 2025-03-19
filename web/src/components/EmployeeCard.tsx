@@ -21,6 +21,9 @@ import {
 } from "@/components/ui/sheet";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
+import { useRef } from "react";
+import axios from "axios";
+import { toast } from "sonner";
 
 interface EmployeeCardProps {
   name: string;
@@ -29,9 +32,67 @@ interface EmployeeCardProps {
   department: string;
   salary: number;
   phoneNumber: string;
+  _id: string;
 }
 
 const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const salaryRef = useRef<HTMLInputElement>(null);
+  const positionRef = useRef<HTMLInputElement>(null);
+  const departmentRef = useRef<HTMLInputElement>(null);
+
+  async function handleUpdate() {
+    const body: { [key: string]: any } = {};
+
+    if (nameRef.current?.defaultValue) {
+      body.name = nameRef.current.defaultValue;
+    }
+
+    if (emailRef.current?.defaultValue) {
+      body.email = emailRef.current.defaultValue;
+    }
+
+    if (phoneRef.current?.defaultValue) {
+      body.phoneNumber = phoneRef.current.defaultValue;
+    }
+
+    if (salaryRef.current?.defaultValue) {
+      body.salary = salaryRef.current.defaultValue;
+    }
+
+    if (positionRef.current?.defaultValue) {
+      body.position = positionRef.current.defaultValue;
+    }
+
+    if (departmentRef.current?.defaultValue) {
+      body.department = departmentRef.current.defaultValue;
+    }
+    try {
+      console.log(data._id)
+      const response = await axios.put(
+        `https://ips-radaur.onrender.com/api/employee/${data._id}`,
+        body,
+        {
+          headers: {
+            "content-type": "application/json",
+          },
+        }
+      );
+      const responseData = response.data;
+
+      if (responseData.status) {
+        toast.success("Data updated successfully");
+      } else {
+        toast.error(responseData.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("An error occurred while updating data");
+      return;
+    }
+  }
   return (
     <Card>
       <CardHeader>
@@ -65,8 +126,9 @@ const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
                   </Label>
                   <Input
                     id="name"
-                    value={data.name}
+                    defaultValue={data.name}
                     className="col-span-3"
+                    ref={nameRef}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -75,8 +137,9 @@ const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
                   </Label>
                   <Input
                     id="email"
-                    value={data.email}
+                    defaultValue={data.email}
                     className="col-span-3"
+                    ref={emailRef}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -85,8 +148,9 @@ const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
                   </Label>
                   <Input
                     id="phone"
-                    value={data.phoneNumber}
+                    defaultValue={data.phoneNumber}
                     className="col-span-3"
+                    ref={phoneRef}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -95,8 +159,9 @@ const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
                   </Label>
                   <Input
                     id="salary"
-                    value={data.salary}
+                    defaultValue={data.salary}
                     className="col-span-3"
+                    ref={salaryRef}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -105,8 +170,9 @@ const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
                   </Label>
                   <Input
                     id="position"
-                    value={data.position}
+                    defaultValue={data.position}
                     className="col-span-3"
+                    ref={positionRef}
                   />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -115,15 +181,18 @@ const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
                   </Label>
                   <Input
                     id="department"
-                    value={data.department}
+                    defaultValue={data.department}
                     className="col-span-3"
+                    ref={departmentRef}
                   />
                 </div>
               </div>
             </div>
             <SheetFooter>
               <SheetClose asChild>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit" onClick={handleUpdate}>
+                  Save changes
+                </Button>
               </SheetClose>
             </SheetFooter>
           </SheetContent>
