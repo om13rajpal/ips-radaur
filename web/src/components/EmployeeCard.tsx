@@ -44,33 +44,16 @@ const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
   const departmentRef = useRef<HTMLInputElement>(null);
 
   async function handleUpdate() {
-    const body: { [key: string]: any } = {};
-
-    if (nameRef.current?.defaultValue) {
-      body.name = nameRef.current.defaultValue;
-    }
-
-    if (emailRef.current?.defaultValue) {
-      body.email = emailRef.current.defaultValue;
-    }
-
-    if (phoneRef.current?.defaultValue) {
-      body.phoneNumber = phoneRef.current.defaultValue;
-    }
-
-    if (salaryRef.current?.defaultValue) {
-      body.salary = salaryRef.current.defaultValue;
-    }
-
-    if (positionRef.current?.defaultValue) {
-      body.position = positionRef.current.defaultValue;
-    }
-
-    if (departmentRef.current?.defaultValue) {
-      body.department = departmentRef.current.defaultValue;
-    }
+    const body = {
+      name: nameRef.current?.value,
+      email: emailRef.current?.value,
+      phoneNumber: phoneRef.current?.value,
+      salary: salaryRef.current?.value,
+      position: positionRef.current?.value,
+      department: departmentRef.current?.value,
+    };
     try {
-      console.log(data._id)
+      console.log(data._id);
       const response = await axios.put(
         `https://ips-radaur.onrender.com/api/employee/${data._id}`,
         body,
