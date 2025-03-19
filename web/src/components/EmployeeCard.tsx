@@ -6,24 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "./ui/button";
-import { Edit3 } from "lucide-react";
-
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { useRef } from "react";
-import axios from "axios";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { SelectMonth } from "./Dropdown";
+import EditButton from "./EditButton";
 
 interface EmployeeCardProps {
   name: string;
@@ -33,153 +18,77 @@ interface EmployeeCardProps {
   salary: number;
   phoneNumber: string;
   _id: string;
+  attendance: any;
 }
 
 const EmployeeCard = ({ data }: { data: EmployeeCardProps }) => {
-  const nameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const phoneRef = useRef<HTMLInputElement>(null);
-  const salaryRef = useRef<HTMLInputElement>(null);
-  const positionRef = useRef<HTMLInputElement>(null);
-  const departmentRef = useRef<HTMLInputElement>(null);
+  const [lateEntry, setLateEntry] = useState(0);
+  const [monthlySalaryMade, setMonthlySalaryMade] = useState(0);
 
-  async function handleUpdate() {
-    const body = {
-      name: nameRef.current?.value,
-      email: emailRef.current?.value,
-      phoneNumber: phoneRef.current?.value,
-      salary: salaryRef.current?.value,
-      position: positionRef.current?.value,
-      department: departmentRef.current?.value,
-    };
-    try {
-      console.log(data._id);
-      const response = await axios.put(
-        `https://ips-radaur.onrender.com/api/employee/${data._id}`,
-        body,
-        {
-          headers: {
-            "content-type": "application/json",
-          },
+  const [date, setDate] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState<number>(date.getMonth());
+
+  useEffect(() => {
+    if (data.attendance && data.attendance.length > 0) {
+      console.log("inside", date.getFullYear());
+      data.attendance.find((year: any) => {
+        if (year.year === date.getFullYear()) {
+          console.log(year);
+          year.months.find((month: any) => {
+            if (month.month === selectedMonth) {
+              console.log(month);
+              setLateEntry(month.late);
+              setMonthlySalaryMade(month.monthSalary);
+            }
+          });
         }
-      );
-      const responseData = response.data;
-
-      if (responseData.status) {
-        toast.success("Data updated successfully");
-      } else {
-        toast.error(responseData.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("An error occurred while updating data");
-      return;
+      });
     }
-  }
+
+    const newDate = new Date(date);
+    newDate.setMonth(selectedMonth);
+    setDate(newDate);
+  }, [data.attendance, selectedMonth]);
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>{data.name}</CardTitle>
-        <CardDescription>{data.phoneNumber}</CardDescription>
+        <CardDescription>
+          <div className="flex gap-3 text-xs items-center">
+            <p>{data.phoneNumber}</p>
+            <div className="h-3 w-[1.5px] bg-zinc-500"></div>
+            <p>{data.department}</p>
+            <div className="h-3 w-[1.5px] bg-zinc-500"></div>
+            <p>{data.position}</p>
+          </div>
+        </CardDescription>
       </CardHeader>
       <CardContent>
-        <p>{data.salary}</p>
-        <p>{data.position}</p>
-        <p>{data.department}</p>
+        <div className="flex gap-2 items-center text-zinc-300">
+          <p className="text-xs">Monthly Salary: </p>
+          <p className="text-sm font-semibold">{data.salary}</p>
+        </div>
+        <div className="flex gap-2 items-center text-zinc-300">
+          <p className="text-xs">Late Entry: </p>
+          <p className="text-sm font-semibold">{lateEntry}</p>
+        </div>
+        <div className="flex gap-2 items-center text-zinc-300">
+          <p className="text-xs">Net Salary Amount: </p>
+          <p className="text-sm font-semibold">{monthlySalaryMade}</p>
+          <p className="text-xs ml-5">
+            ~{" "}
+            {date.toLocaleString("default", {
+              month: "short",
+            })}
+          </p>
+        </div>
+        <div className="mt-2">
+          <SelectMonth setSelectedMonth={setSelectedMonth} />
+        </div>
       </CardContent>
       <CardFooter>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size={"icon"}>
-              <Edit3 />
-            </Button>
-          </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Edit profile</SheetTitle>
-              <SheetDescription>
-                Make changes to your profile here. Click save when you're done.
-              </SheetDescription>
-            </SheetHeader>
-            <div className="px-5">
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Name
-                  </Label>
-                  <Input
-                    id="name"
-                    defaultValue={data.name}
-                    className="col-span-3"
-                    ref={nameRef}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="email" className="text-right">
-                    email
-                  </Label>
-                  <Input
-                    id="email"
-                    defaultValue={data.email}
-                    className="col-span-3"
-                    ref={emailRef}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="phone" className="text-right">
-                    phone
-                  </Label>
-                  <Input
-                    id="phone"
-                    defaultValue={data.phoneNumber}
-                    className="col-span-3"
-                    ref={phoneRef}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="salary" className="text-right">
-                    Salary
-                  </Label>
-                  <Input
-                    id="salary"
-                    defaultValue={data.salary}
-                    className="col-span-3"
-                    ref={salaryRef}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="position" className="text-right">
-                    Position
-                  </Label>
-                  <Input
-                    id="position"
-                    defaultValue={data.position}
-                    className="col-span-3"
-                    ref={positionRef}
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="department" className="text-right">
-                    Department
-                  </Label>
-                  <Input
-                    id="department"
-                    defaultValue={data.department}
-                    className="col-span-3"
-                    ref={departmentRef}
-                  />
-                </div>
-              </div>
-            </div>
-            <SheetFooter>
-              <SheetClose asChild>
-                <Button type="submit" onClick={handleUpdate}>
-                  Save changes
-                </Button>
-              </SheetClose>
-            </SheetFooter>
-          </SheetContent>
-        </Sheet>
+        <EditButton data={data} />
       </CardFooter>
     </Card>
   );

@@ -35,7 +35,6 @@ export function AddEmployee() {
       password: passwordRef.current?.value,
     };
 
-    console.log(body);
     try {
       const response = await axios.post(
         "https://ips-radaur.onrender.com/api/employee/signup",
@@ -55,7 +54,6 @@ export function AddEmployee() {
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
       toast.error("An error occurred");
     }
   }

@@ -11,7 +11,6 @@ const Dashboard = () => {
   }, []);
 
   async function fetchData() {
-    console.log("Fetching data");
     try {
       const response = await axios.get(
         "https://ips-radaur.onrender.com/api/employee/all"
@@ -20,13 +19,10 @@ const Dashboard = () => {
 
       if (data.status) {
         setData(data.data);
-        console.log(data.data);
       } else {
-        console.log(data.message);
         toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
       toast.error("An error occurred whilte fetching data");
     }
   }

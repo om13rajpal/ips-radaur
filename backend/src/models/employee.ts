@@ -1,17 +1,12 @@
 import mongoose, { Document } from "mongoose";
 
-enum Department {
-  Teacher = "Teacher",
-  Driver = "Driver",
-}
-
 export interface Employee extends Document {
   email: string;
   password: string;
   salary: any;
   name: string;
   position: string;
-  department: Department;
+  department: string;
   phoneNumber: string;
   attendance: any;
 }
@@ -36,15 +31,20 @@ const monthSchema = new mongoose.Schema({
   attendance: [mongoose.Schema.Types.ObjectId],
 });
 
-const yearSchema = new mongoose.Schema({
-  year: {
-    type: Number,
-    require: true,
+const yearSchema = new mongoose.Schema(
+  {
+    year: {
+      type: Number,
+      require: true,
+    },
+    months: [
+      {
+        type: monthSchema,
+      },
+    ],
   },
-  months: [{
-    type: monthSchema,
-  }],
-}, {_id: false});
+  { _id: false }
+);
 
 const employeeSchema = new mongoose.Schema<Employee>({
   email: {
@@ -78,16 +78,17 @@ const employeeSchema = new mongoose.Schema<Employee>({
   department: {
     type: String,
     required: true,
-    enum: Object.values(Department),
   },
   phoneNumber: {
     type: String,
     required: true,
     trim: true,
   },
-  attendance: [{
-    type: yearSchema,
-  }],
+  attendance: [
+    {
+      type: yearSchema,
+    },
+  ],
 });
 
 const employeeModel = mongoose.model<Employee>("employee", employeeSchema);
