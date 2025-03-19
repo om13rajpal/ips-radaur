@@ -8,7 +8,7 @@ export async function updateEmployee(req: Request, res: Response) {
     const updatedUser = await employeeModel.findByIdAndUpdate(
       id,
       {
-        $set: body,
+        "$set": body,
       },
       {
         new: true,
