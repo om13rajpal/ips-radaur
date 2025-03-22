@@ -1,5 +1,7 @@
 import { Button } from "./ui/button";
 import { Edit3 } from "lucide-react";
+import { BASE_URL } from "@/constants/contants";
+
 
 import {
   Sheet,
@@ -36,7 +38,7 @@ const EditButton = ({ data }: any) => {
     };
     try {
       const response = await axios.put(
-        `https://ips-radaur.onrender.com/api/employee/${data._id}`,
+        `${BASE_URL}/api/employee/${data._id}`,
         body,
         {
           headers: {

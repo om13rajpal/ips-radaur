@@ -72,20 +72,23 @@ export default async function attendanceHandler(req: Request, res: Response) {
       month.attendance.push(saveAtt._id);
       month.present += 1;
 
-      month.monthSalary += 1000;
+      const daySalary = employee.salary / 30;
+
+      month.monthSalary += daySalary;
 
       if (status === Status.Late) {
+        const salaryCut = daySalary / 20;
         if (month.late >= 4) {
           sendMail(
             employee.email,
             "Salary Deduction",
             `Dear ${
               employee.name
-            },\nYour have been deducted 100 for being late for more than 4 times in a month\nYour late count for this month is ${
+            },\nYour have been deducted ${salaryCut} for being late for more than 4 times in a month\nYour late count for this month is ${
               month.late + 1
             }`
           );
-          month.monthSalary -= 100;
+          month.monthSalary -= salaryCut;
         }
         month.late += 1;
       }

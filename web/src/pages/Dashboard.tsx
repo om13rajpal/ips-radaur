@@ -1,8 +1,9 @@
 import EmployeeCard from "@/components/EmployeeCard";
 import { Input } from "@/components/ui/input";
+import { BASE_URL } from "@/constants/contants";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const [data, setData] = useState([]);
@@ -20,9 +21,7 @@ const Dashboard = () => {
 
   async function fetchData() {
     try {
-      const response = await axios.get(
-        "https://ips-radaur.onrender.com/api/employee/all"
-      );
+      const response = await axios.get(`${BASE_URL}/api/employee/all`);
       const data = response.data;
 
       if (data.status) {
@@ -58,7 +57,6 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-      <Toaster />
     </div>
   );
 };

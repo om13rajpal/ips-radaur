@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { BASE_URL } from "@/constants/contants";
+
 import {
   Dialog,
   DialogClose,
@@ -37,7 +39,7 @@ export function AddEmployee() {
 
     try {
       const response = await axios.post(
-        "https://ips-radaur.onrender.com/api/employee/signup",
+        `${BASE_URL}/api/employee/signup`,
         body,
         {
           headers: {

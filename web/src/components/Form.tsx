@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { BASE_URL } from "@/constants/contants";
+
 import {
   Form,
   FormControl,
@@ -43,15 +45,11 @@ export function LoginForm() {
     };
 
     try {
-      const response = await axios.post(
-        "https://ips-radaur.onrender.com/api/admin/login",
-        body,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/api/admin/login`, body, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = response.data;
 
