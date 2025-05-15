@@ -25,6 +25,4 @@ app.get("/", (req, res) => {
 app.use(Handle404);
 app.use(handleError);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+export default app;
